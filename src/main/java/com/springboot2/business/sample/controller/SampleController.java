@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,8 +24,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot2.business.sample.dataset.TUser;
 import com.springboot2.business.sample.entity.Department;
 import com.springboot2.business.sample.entity.User;
+import com.springboot2.business.sample.facade.SampleFacade;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
@@ -35,6 +38,9 @@ import io.swagger.annotations.ApiResponses;
 @Api("Sample Api")
 @Controller
 public class SampleController {
+
+    @Autowired
+    SampleFacade sampleFacade;
 
     @Autowired
     ObjectMapper mapper;
@@ -127,5 +133,13 @@ public class SampleController {
         d.setId((long) 1);
         d.setName("hello");
         return d;
+    }
+
+    @RequestMapping("/user/{id}")
+    public @ResponseBody TUser getUserById(@PathVariable Short id) {
+
+        TUser user = sampleFacade.selectByPrimaryKey(id);
+        return user;
+
     }
 }
