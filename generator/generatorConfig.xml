@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE generatorConfiguration PUBLIC
+   "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<classPathEntry location="D:/pleiades_workspace/SpringBoot2/lib/ojdbc8.jar" />
+	<context id="context1">
+		<jdbcConnection driverClass="oracle.jdbc.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@192.168.1.161:1521:orcl" userId="oracle"
+			password="oracle" />
+
+		<javaModelGenerator targetPackage="com.springboot2.business.sample.dataset"
+			targetProject="SpringBoot2" />
+		<sqlMapGenerator targetPackage="com.springboot2.business.sample.mapper"
+			targetProject="SpringBoot2" />
+		<javaClientGenerator targetPackage="com.springboot2.business.sample.mapper"
+			targetProject="SpringBoot2" type="XMLMAPPER" />
+
+		<table tableName="T_USER" />
+
+	</context>
+</generatorConfiguration>
