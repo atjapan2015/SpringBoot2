@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @MapperScan(basePackages = "com.springboot2.business.sample.mapper")
@@ -23,7 +25,7 @@ public class MyBatisConfig {
     DataSourceProperties dataSourceProperties;
 
     @Bean
-    DataSource realDataSource() throws Exception {
+    DataSource druidDataSource() throws Exception {
         Properties props = new Properties();
         props.put("driverClassName", this.dataSourceProperties.getDriverClassName());
         props.put("url", this.dataSourceProperties.getUrl());
@@ -42,10 +44,28 @@ public class MyBatisConfig {
     }
 
     @Bean
+    @Primary
+    DataSource hikariDataSource() throws Exception {
+
+        HikariDataSource ds = new HikariDataSource();
+        ds.setDriverClassName(this.dataSourceProperties.getDriverClassName());
+        ds.setJdbcUrl(this.dataSourceProperties.getUrl());
+        ds.setUsername(this.dataSourceProperties.getUsername());
+        ds.setPassword(this.dataSourceProperties.getPassword());
+        //        ds.setMinimumIdle(5);
+        //        ds.setMaximumPoolSize(5);
+        ds.setConnectionTestQuery("SELECT 1 FROM DUAL");
+        return ds;
+
+        // return new Log4jdbcProxyDataSource(this.dataSource);
+    }
+
+    @Bean
     public SqlSessionFactory getSqlSessionFactory(DataSource ds) throws Exception {
 
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(realDataSource());
+        // factoryBean.setDataSource(druidDataSource());
+        factoryBean.setDataSource(hikariDataSource());
         factoryBean.setTypeAliasesPackage("com.springboot2.business.sample.dataset");
         factoryBean
                 .setMapperLocations(new PathMatchingResourcePatternResolver()
